@@ -1,0 +1,29 @@
+# Python Artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+venv/
+env/
+.venv/
+
+# Environment Variables & Secrets
+.env
+.env.local
+*.pem
+*.key
+certs/
+
+# Logs and Network Captures
+*.log
+*.pcap
+*.pcapng
+
+# macOS System Files
+.DS_Store
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp

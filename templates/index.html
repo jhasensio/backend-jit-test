@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INAIL - {{ dept_name }}</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+        
+        /* The bottom border color is dynamically injected */
+        header { background-color: #ffffff; padding: 20px; text-align: center; border-bottom: 4px solid {{ theme_color }}; }
+        .logo-container { margin-bottom: 10px; }
+        .logo-container img { max-width: 200px; height: auto; }
+        .header-title { color: #555; font-size: 14px; margin: 0; }
+        
+        nav { background-color: #333; overflow: hidden; }
+        nav a { float: left; display: block; color: white; text-align: center; padding: 14px 16px; text-decoration: none; }
+        /* Hover state uses the dynamic theme color */
+        nav a:hover { background-color: {{ theme_color }}; color: white; }
+        
+        .container { padding: 30px; max-width: 1000px; margin: 20px auto; background-color: white; min-height: 400px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+        
+        /* Headings and borders use the dynamic theme color */
+        h1 { color: {{ theme_color }}; }
+        .dynamic-border { border-left: 4px solid {{ theme_color }}; padding-left: 15px; margin-top: 30px; }
+        
+        footer { background-color: #333; color: white; text-align: center; padding: 10px; position: fixed; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-container">
+        <img src="{{ url_for('static', filename='logo-inail.svg') }}" alt="Logo INAIL">
+    </div>
+    <p class="header-title">Istituto Nazionale per l'Assicurazione contro gli Infortuni sul Lavoro</p>
+</header>
+
+<nav>
+    <a href="/portale/it.html">Home</a>
+    <a href="/HR">HR</a>
+    <a href="/FIN">Finance</a>
+    <a href="/ENG">Engineering</a>
+</nav>
+
+<div class="container">
+    <h1>Benvenuto in INAIL - {{ dept_name }}</h1>
+    <p>Questo è un server di test per simulare le risposte del backend del portale istituzionale.</p>
+    
+    <div class="dynamic-border">
+        <h3>Servizi in primo piano</h3>
+        <ul>
+            {% for service in services %}
+                <li>{{ service }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 Mock INAIL Test Environment</p>
+</footer>
+
+</body>
+</html>

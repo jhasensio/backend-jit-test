@@ -43,15 +43,24 @@ def landing():
 
 @app.route('/HT')
 def ht_view():
-    return render_template('ht.html', conn=get_connection_info())
+    return render_template('ht.html',
+        q=request.args.get('q', ''),
+        tab=request.args.get('tab', 'home'),
+        conn=get_connection_info())
 
 @app.route('/FIN')
 def fin_view():
-    return render_template('fin.html', conn=get_connection_info())
+    return render_template('fin.html',
+        q=request.args.get('q', ''),
+        tab=request.args.get('tab', 'home'),
+        conn=get_connection_info())
 
 @app.route('/ENG')
 def eng_view():
-    return render_template('eng.html', conn=get_connection_info())
+    return render_template('eng.html',
+        q=request.args.get('q', ''),
+        tab=request.args.get('tab', 'home'),
+        conn=get_connection_info())
 
 # INTENTIONALLY VULNERABLE — educational SQL injection demo
 @app.route('/search')

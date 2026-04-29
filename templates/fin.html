@@ -6,326 +6,272 @@
     <title>ACME Financial Services</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: Arial, sans-serif; background: #f4f7f4; color: #1a2e1a; }
+        body { font-family: Arial, sans-serif; background: #f7faf7; color: #1a2e1a; }
 
         header {
-            background: #ffffff;
+            background: #fff;
             border-bottom: 4px solid #228B22;
             padding: 18px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 1px 4px rgba(26,46,26,0.06);
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(26,46,26,0.07);
         }
-        .logo-block .logo-text {
-            font-size: 22px;
-            font-weight: 400;
-            color: #1a2e1a;
-            letter-spacing: 0.5px;
+        .logo-text { font-size: 24px; font-weight: 400; color: #1a2e1a; }
+        .logo-text strong { color: #228B22; font-weight: 700; }
+        .logo-sub { font-size: 13px; color: #4a6e4a; margin-top: 2px; font-style: italic; }
+        .dept-badge {
+            background: #e8f5e8; color: #228B22; border: 1px solid #c0d8c0;
+            font-size: 11px; font-weight: 700; padding: 4px 12px;
+            border-radius: 4px; letter-spacing: 0.5px;
         }
-        .logo-block .logo-text strong {
-            color: #228B22;
-            font-weight: 800;
-        }
-        .logo-block .logo-sub {
-            font-size: 12px;
-            color: #4a6e4a;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
-        }
-        .header-pills { display: flex; gap: 8px; align-items: center; }
-        .hpill {
-            font-size: 11px;
-            padding: 3px 10px;
-            border-radius: 4px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-        }
-        .hpill.secure { background: #e8f5e8; color: #228B22; border: 1px solid #c0d8c0; }
-        .hpill.period { background: #f0f4f0; color: #4a6e4a; border: 1px solid #d4e4d4; }
 
-        nav {
-            background: #1a3a1a;
-            display: flex;
-        }
+        nav { background: #0d2e0d; display: flex; }
         nav a {
-            display: block;
-            color: rgba(255,255,255,0.70);
-            text-decoration: none;
-            padding: 12px 20px;
-            font-size: 13px;
-            transition: background 0.15s, color 0.15s;
+            display: block; color: rgba(255,255,255,0.75); text-decoration: none;
+            padding: 13px 20px; font-size: 13px; transition: background 0.15s, color 0.15s;
         }
-        nav a:hover { background: rgba(34,139,34,0.3); color: white; }
+        nav a:hover { background: rgba(255,255,255,0.10); color: white; }
         nav a.active { background: #228B22; color: white; }
+        nav a.attack-tab { color: rgba(255,120,120,0.85); margin-left: auto; }
+        nav a.attack-tab:hover { background: rgba(220,53,69,0.25); color: #ff9999; }
+        nav a.attack-tab.active { background: #dc3545; color: white; }
 
-        .dept-banner {
-            background: #228B22;
-            padding: 22px 40px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .dept-banner-left h1 { font-size: 20px; color: white; margin-bottom: 3px; }
-        .dept-banner-left p { font-size: 12px; color: rgba(255,255,255,0.80); }
-        .banner-status {
-            background: rgba(255,255,255,0.15);
-            color: white;
-            font-size: 12px;
-            padding: 5px 14px;
-            border-radius: 3px;
-        }
-        .banner-status::before { content: "● "; color: #a8ffa8; }
-
-        .content-layout {
-            display: flex;
-            gap: 24px;
+        .hero-strip {
+            background: linear-gradient(135deg, #228B22 0%, #2da32d 100%);
             padding: 28px 40px;
-            max-width: 1100px;
-            margin: 0 auto;
-            align-items: flex-start;
         }
-        .services-col { flex: 7; }
-        .widget-col { flex: 3; min-width: 220px; }
+        .hero-strip h1 { font-size: 22px; color: white; margin-bottom: 5px; }
+        .hero-strip p { font-size: 13px; color: rgba(255,255,255,0.85); }
 
+        .container { padding: 28px 40px; max-width: 1100px; margin: 0 auto; }
         .section-label {
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #8aaa8a;
-            margin-bottom: 10px;
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: #8aaa8a; margin-bottom: 16px;
         }
 
-        /* Services list */
-        .service-row {
-            display: flex;
-            align-items: center;
-            padding: 14px 0;
-            border-bottom: 1px solid #d4e4d4;
-            gap: 14px;
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+            gap: 18px;
         }
-        .service-row:last-child { border-bottom: none; }
+        .service-card {
+            background: white; border: 1px solid #d4e4d4; border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(26,46,26,0.07); padding: 24px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .service-card:hover { box-shadow: 0 4px 14px rgba(26,46,26,0.12); transform: translateY(-2px); }
         .svc-icon {
-            width: 36px;
-            height: 36px;
-            background: #e8f5e8;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            flex-shrink: 0;
+            width: 44px; height: 44px; border-radius: 50%;
+            background: #e8f5e8; display: flex; align-items: center;
+            justify-content: center; font-size: 22px; margin-bottom: 14px;
         }
-        .svc-info { flex: 1; }
-        .svc-name { font-size: 14px; color: #1a2e1a; font-weight: 600; margin-bottom: 2px; }
-        .svc-desc { font-size: 11px; color: #4a6e4a; line-height: 1.4; }
-        .svc-badge {
-            background: #e8f5e8;
-            color: #228B22;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 2px 8px;
-            border-radius: 2px;
-            flex-shrink: 0;
-        }
+        .svc-name { font-size: 15px; color: #1a2e1a; font-weight: 600; margin-bottom: 6px; }
+        .svc-desc { font-size: 12px; color: #4a6e4a; line-height: 1.55; margin-bottom: 14px; }
+        .svc-link { font-size: 12px; font-weight: 600; color: #228B22; text-decoration: none; }
+        .svc-link:hover { text-decoration: underline; }
 
-        /* Summary widget */
-        .summary-widget {
-            background: white;
-            border: 1px solid #d4e4d4;
-            border-top: 3px solid #228B22;
-            border-radius: 8px;
-            padding: 20px;
+        /* ── Attack Tab ── */
+        .attack-warning {
+            background: rgba(220,53,69,0.06); border: 1px solid rgba(220,53,69,0.25);
+            border-radius: 6px; padding: 12px 18px; margin-bottom: 20px;
+            font-size: 13px; color: #842029; display: flex; align-items: center; gap: 10px;
         }
-        .widget-title {
-            font-size: 11px;
-            color: #8aaa8a;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 14px;
+        .lab-cards { display: flex; gap: 20px; flex-wrap: wrap; }
+        .lab-card {
+            background: white; border: 1px solid #d4e4d4; border-radius: 8px;
+            padding: 22px 24px; flex: 1; min-width: 280px;
+            box-shadow: 0 1px 4px rgba(26,46,26,0.07);
         }
-        .widget-row {
-            padding: 10px 0;
-            border-bottom: 1px solid #e8f5e8;
+        .lab-card.xss  { border-top: 4px solid #dc3545; }
+        .lab-card.sqli { border-top: 4px solid #6f42c1; }
+        .lab-card h3 { font-size: 15px; margin-bottom: 8px; }
+        .lab-card.xss  h3 { color: #dc3545; }
+        .lab-card.sqli h3 { color: #6f42c1; }
+        .lab-card .desc { font-size: 13px; color: #4a6e4a; margin-bottom: 14px; line-height: 1.5; }
+        .attack-label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #8aaa8a; margin-bottom: 5px;
         }
-        .widget-row:last-of-type { border-bottom: none; }
-        .widget-key { font-size: 11px; color: #4a6e4a; margin-bottom: 2px; }
-        .widget-val { font-size: 13px; color: #1a2e1a; font-weight: 600; }
-        .widget-val.ok::before { content: "● "; color: #228B22; font-size: 10px; }
-        .widget-cta {
-            display: block;
-            background: #e8f5e8;
-            color: #228B22;
-            border: 1px solid #c0d8c0;
-            border-radius: 4px;
-            text-align: center;
-            padding: 8px;
-            font-size: 12px;
-            font-weight: 600;
-            text-decoration: none;
-            margin-top: 14px;
-            transition: background 0.15s;
+        .lab-card code {
+            display: block; background: #f6f8fa; border: 1px solid #d4e4d4;
+            border-radius: 4px; padding: 8px 10px; font-size: 12px;
+            font-family: 'Courier New', monospace; color: #24292f;
+            word-break: break-all; margin-bottom: 10px;
         }
-        .widget-cta:hover { background: #d0eccc; }
+        .probe-form { display: flex; gap: 8px; margin-bottom: 10px; }
+        .probe-form input[type=text] {
+            flex: 1; padding: 7px 10px; border: 1px solid #d4e4d4;
+            border-radius: 4px; font-size: 13px; font-family: 'Courier New', monospace;
+        }
+        .probe-form button {
+            padding: 7px 16px; background: #dc3545; color: white;
+            border: none; border-radius: 4px; font-size: 13px; cursor: pointer; font-weight: 600;
+        }
+        .probe-form button:hover { background: #b02a37; }
+        .reflected-box {
+            background: #fff3cd; border-left: 4px solid #ffc107;
+            padding: 10px 14px; border-radius: 0 4px 4px 0;
+            font-size: 13px; margin-bottom: 10px; color: #664d03;
+        }
+        .reflected-label { font-size: 11px; font-weight: 600; color: #a67c00; margin-right: 6px; }
+        .attack-btn {
+            display: inline-block; padding: 6px 14px; border-radius: 4px;
+            font-size: 12px; font-weight: 700; text-decoration: none; color: white;
+            margin-right: 8px; margin-top: 4px;
+        }
+        .attack-btn.red    { background: #dc3545; }
+        .attack-btn.purple { background: #6f42c1; }
+        .attack-btn:hover { opacity: 0.85; }
+        .expected {
+            margin-top: 12px; font-size: 12px; color: #4a6e4a;
+            background: #f0fff4; border-left: 3px solid #28a745;
+            padding: 6px 10px; border-radius: 0 4px 4px 0;
+        }
 
         /* ── Connection Details Panel ── */
-        .conn-wrap { margin: 8px 40px 40px; border-radius: 8px; overflow: hidden; }
+        .conn-wrap { margin: 32px 40px 40px; }
         .conn-panel {
-            background: #0d1117;
-            color: #58a6ff;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            padding: 20px;
-            border: 1px solid #30363d;
+            background: #0d1117; color: #58a6ff;
+            font-family: 'Courier New', Courier, monospace; font-size: 12px;
+            padding: 20px; border-radius: 8px; border: 1px solid #30363d;
         }
         .conn-panel-title {
-            color: #8b949e;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid #21262d;
-            padding-bottom: 8px;
+            color: #8b949e; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 14px;
+            border-bottom: 1px solid #21262d; padding-bottom: 8px;
         }
         .conn-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 6px 30px;
-            margin-bottom: 14px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 6px 30px; margin-bottom: 14px;
         }
         .conn-row { display: flex; gap: 8px; }
         .conn-key { color: #7ee787; min-width: 130px; flex-shrink: 0; }
         .conn-val { color: #e6edf3; word-break: break-all; }
         .conn-headers-title {
-            color: #8b949e;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 14px 0 8px;
-            border-top: 1px solid #21262d;
-            padding-top: 10px;
+            color: #8b949e; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; margin: 14px 0 8px;
+            border-top: 1px solid #21262d; padding-top: 10px;
         }
         .conn-headers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 4px 30px;
         }
 
         footer {
-            background: #eaf2ea;
-            border-top: 1px solid #d4e4d4;
-            padding: 14px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            color: #8aaa8a;
+            background: #eaf2ea; border-top: 1px solid #d4e4d4;
+            padding: 14px 40px; display: flex; justify-content: space-between;
+            align-items: center; font-size: 12px; color: #8aaa8a;
         }
-        footer a {
-            color: #8aaa8a;
-            text-decoration: none;
-            transition: color 0.15s;
-        }
+        footer a { color: #8aaa8a; text-decoration: none; }
         footer a:hover { color: #228B22; }
     </style>
 </head>
 <body>
 
 <header>
-    <div class="logo-block">
+    <div>
         <div class="logo-text"><strong>ACME</strong> Financial Services</div>
         <div class="logo-sub">Secure. Accurate. Trusted.</div>
     </div>
-    <div class="header-pills">
-        <span class="hpill secure">&#10003; SECURE CONNECTION</span>
-        <span class="hpill period">FY2026 Q1</span>
-    </div>
+    <span class="dept-badge">FINANCE PORTAL</span>
 </header>
 
 <nav>
-    <a href="#" class="active">Overview</a>
-    <a href="#">Accounts</a>
+    <a href="/FIN" {% if tab != 'attack' %}class="active"{% endif %}>Home</a>
     <a href="#">Reports</a>
     <a href="#">Invoicing</a>
-    <a href="#">Audit &amp; Compliance</a>
+    <a href="#">Audit</a>
+    <a href="/FIN?tab=attack" class="attack-tab {% if tab == 'attack' %}active{% endif %}">⚡ Attack</a>
 </nav>
 
-<div class="dept-banner">
-    <div class="dept-banner-left">
-        <h1>Financial Services Portal</h1>
-        <p>Q1 2026 &mdash; Period Open</p>
-    </div>
-    <span class="banner-status">All Systems Nominal</span>
+{% if tab != 'attack' %}
+<!-- ── Home / Services ── -->
+<div class="hero-strip">
+    <h1>Welcome to the Financial Services Portal</h1>
+    <p>Q1 2026 — Period Open. All systems nominal across invoicing, reporting, and audit.</p>
 </div>
-
-<div class="content-layout">
-
-    <!-- Services list -->
-    <div class="services-col">
-        <div class="section-label">Available Services</div>
-
-        <div class="service-row">
+<div class="container">
+    <div class="section-label">Financial Services</div>
+    <div class="services-grid">
+        <div class="service-card">
             <div class="svc-icon">📄</div>
-            <div class="svc-info">
-                <div class="svc-name">Electronic Invoicing</div>
-                <div class="svc-desc">Issue, track, and reconcile invoices with fiscal compliance.</div>
-            </div>
-            <span class="svc-badge">ACTIVE</span>
+            <div class="svc-name">Electronic Invoicing</div>
+            <div class="svc-desc">Issue, track, and reconcile invoices with fiscal compliance.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
         </div>
-
-        <div class="service-row">
+        <div class="service-card">
             <div class="svc-icon">📊</div>
-            <div class="svc-info">
-                <div class="svc-name">Financial Statements</div>
-                <div class="svc-desc">Generate period-end P&amp;L, balance sheet, and cash flow reports.</div>
-            </div>
-            <span class="svc-badge">ACTIVE</span>
+            <div class="svc-name">Financial Statements</div>
+            <div class="svc-desc">Generate period-end P&amp;L, balance sheet, and cash flow reports.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
         </div>
-
-        <div class="service-row">
+        <div class="service-card">
             <div class="svc-icon">💼</div>
-            <div class="svc-info">
-                <div class="svc-name">Expense Reporting</div>
-                <div class="svc-desc">Submit, approve, and reimburse employee expense claims.</div>
-            </div>
-            <span class="svc-badge">ACTIVE</span>
+            <div class="svc-name">Expense Reporting</div>
+            <div class="svc-desc">Submit, approve, and reimburse employee expense claims.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
         </div>
-
-        <div class="service-row">
+        <div class="service-card">
             <div class="svc-icon">🔍</div>
-            <div class="svc-info">
-                <div class="svc-name">Internal Audit</div>
-                <div class="svc-desc">Policy compliance checks, GL reconciliation, and variance analysis.</div>
-            </div>
-            <span class="svc-badge">ACTIVE</span>
+            <div class="svc-name">Internal Audit</div>
+            <div class="svc-desc">Policy compliance checks, GL reconciliation, and variance analysis.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
         </div>
     </div>
-
-    <!-- Summary widget -->
-    <div class="widget-col">
-        <div class="section-label">Period Summary</div>
-        <div class="summary-widget">
-            <div class="widget-title">Period Summary</div>
-            <div class="widget-row">
-                <div class="widget-key">Fiscal Period</div>
-                <div class="widget-val">Q1 2026 (Open)</div>
-            </div>
-            <div class="widget-row">
-                <div class="widget-key">Ledger Status</div>
-                <div class="widget-val ok">Reconciled</div>
-            </div>
-            <div class="widget-row">
-                <div class="widget-key">Last Sync</div>
-                <div class="widget-val">Today 09:14 UTC</div>
-            </div>
-            <a class="widget-cta" href="#">View Full Report &rarr;</a>
-        </div>
-    </div>
-
 </div>
 
-<!-- Connection Details Panel -->
+{% else %}
+<!-- ── Attack Tab ── -->
+<div class="hero-strip" style="background: linear-gradient(135deg, #6d1a1a 0%, #991f1f 100%);">
+    <h1>⚡ Attack Lab — Financial Services Portal</h1>
+    <p>Practice web attack techniques against this isolated target. Educational use only.</p>
+</div>
+<div class="container">
+    <div class="attack-warning">
+        <span style="font-size:18px">⚠</span>
+        <div><strong>Ethical Hacking Lab — Educational Use Only.</strong>
+        Vulnerabilities are intentional. Do not deploy on a public network.</div>
+    </div>
+    <div class="lab-cards">
+
+        <div class="lab-card xss">
+            <h3>🔴 Exercise 1 — Reflected XSS</h3>
+            <p class="desc">The <code>q</code> parameter is reflected into this page without escaping
+            (<code>| safe</code> filter). Any HTML or JavaScript you enter will execute in the browser.</p>
+            <div class="attack-label">XSS Probe</div>
+            <form class="probe-form" method="GET" action="/FIN">
+                <input type="hidden" name="tab" value="attack">
+                <input type="text" name="q" value="{{ q | e }}" placeholder="&lt;script&gt;alert(1)&lt;/script&gt;">
+                <button type="submit">Send</button>
+            </form>
+            {% if q %}
+            <div class="reflected-box">
+                <span class="reflected-label">REFLECTED:</span>{{ q | safe }}
+            </div>
+            {% endif %}
+            <div class="attack-label">Quick Payloads</div>
+            <code>&lt;script&gt;alert('XSS on FIN')&lt;/script&gt;</code>
+            <a class="attack-btn red" href="/FIN?tab=attack&q=<script>alert('XSS on FIN')</script>">▶ Fire Alert</a>
+            <a class="attack-btn red" href="/FIN?tab=attack&q=<img src=x onerror=alert('img XSS')>">▶ img onerror</a>
+            <div class="expected">✔ Expected: browser alert fires; the reflected box renders your HTML/JS.</div>
+        </div>
+
+        <div class="lab-card sqli">
+            <h3>🟣 Exercise 2 — SQL Injection</h3>
+            <p class="desc">The <code>/search</code> endpoint builds its query via string concatenation.
+            Injected SQL runs against a live in-memory SQLite database. The raw query is always shown.</p>
+            <div class="attack-label">Payload — dump all rows</div>
+            <code>' OR '1'='1</code>
+            <a class="attack-btn purple" href="/search?q=' OR '1'='1">▶ Dump All Rows</a>
+            <div class="attack-label" style="margin-top:12px">Payload — UNION extraction</div>
+            <code>' UNION SELECT id,name,role,salary,department FROM employees-- </code>
+            <a class="attack-btn purple" href="/search?q=' UNION SELECT id,name,role,salary,department FROM employees-- ">▶ UNION Attack</a>
+            <div class="expected">✔ Expected: all employee records returned; raw SQL shows the injection.</div>
+        </div>
+
+    </div>
+</div>
+{% endif %}
+
 <div class="conn-wrap">
     <div class="conn-panel">
         <div class="conn-panel-title">&#9654; Connection Details (Educational View)</div>

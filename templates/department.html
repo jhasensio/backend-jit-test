@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcmeCorp – {{ dept_name }}</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background-color: #f0f2f5; }
+
+        header {
+            background-color: #ffffff;
+            padding: 20px 40px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border-bottom: 4px solid {{ theme_color }};
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+        }
+        .logo-text {
+            font-size: 28px;
+            font-weight: 700;
+            color: #004080;
+            letter-spacing: -0.5px;
+        }
+        .logo-text span { color: #e63946; }
+        .header-sub { color: #666; font-size: 13px; margin-top: 2px; }
+
+        nav { background-color: #1a1a2e; overflow: hidden; }
+        nav a {
+            float: left;
+            display: block;
+            color: #ccd6f6;
+            text-align: center;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        nav a:hover { background-color: {{ theme_color }}; color: white; }
+        nav a.active { background-color: {{ theme_color }}; color: white; font-weight: 600; }
+
+        .dept-banner {
+            background: {{ theme_color }};
+            color: white;
+            padding: 28px 40px;
+        }
+        .dept-banner h1 { font-size: 26px; margin-bottom: 4px; }
+        .dept-banner p { font-size: 14px; opacity: 0.85; }
+
+        .container {
+            padding: 30px 40px;
+            max-width: 1100px;
+            margin: 24px auto;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .services-title {
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+        .service-item {
+            padding: 16px;
+            border-left: 4px solid {{ theme_color }};
+            background: #f8f9fa;
+            border-radius: 0 6px 6px 0;
+            font-size: 14px;
+            color: #333;
+        }
+        .service-item::before {
+            content: "✓ ";
+            color: {{ theme_color }};
+            font-weight: 700;
+        }
+
+        .info-box {
+            margin-top: 24px;
+            padding: 16px 20px;
+            background: #f0f6ff;
+            border: 1px solid #cce0ff;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #555;
+        }
+        .info-box strong { color: #004080; }
+
+        /* ── Connection Details Panel ── */
+        .conn-panel {
+            background: #0d1117;
+            color: #58a6ff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            padding: 20px 40px;
+            margin: 0 40px 80px;
+            border-radius: 8px;
+            border: 1px solid #30363d;
+        }
+        .conn-panel-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 8px;
+        }
+        .conn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 6px 30px;
+            margin-bottom: 14px;
+        }
+        .conn-row { display: flex; gap: 8px; }
+        .conn-key { color: #7ee787; min-width: 130px; flex-shrink: 0; }
+        .conn-val { color: #e6edf3; word-break: break-all; }
+        .conn-headers-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 14px 0 8px;
+            border-top: 1px solid #21262d;
+            padding-top: 10px;
+        }
+        .conn-headers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 4px 30px;
+        }
+
+        footer {
+            background-color: #1a1a2e;
+            color: #8892b0;
+            text-align: center;
+            padding: 14px;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 13px;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div>
+        <div class="logo-text">Acme<span>Corp</span></div>
+        <div class="header-sub">Enterprise Corporate Portal – Demo Environment</div>
+    </div>
+</header>
+
+<nav>
+    <a href="/">Home</a>
+    <a href="/HT" {% if dept_code == 'HT' %}class="active"{% endif %}>Human Talent</a>
+    <a href="/FIN" {% if dept_code == 'FIN' %}class="active"{% endif %}>Finance</a>
+    <a href="/ENG" {% if dept_code == 'ENG' %}class="active"{% endif %}>Engineering</a>
+</nav>
+
+<div class="dept-banner">
+    <h1>{{ dept_name }}</h1>
+    <p>AcmeCorp – Backend simulation for the <strong>{{ dept_code }}</strong> department</p>
+</div>
+
+<div class="container">
+    <div class="services-title">Available Services</div>
+    <div class="services-grid">
+        {% for service in services %}
+        <div class="service-item">{{ service }}</div>
+        {% endfor %}
+    </div>
+    <div class="info-box">
+        <strong>Note:</strong> This is a demo backend server simulating the <strong>{{ dept_name }}</strong>
+        responses. No real data is processed. For educational and testing purposes only.
+    </div>
+</div>
+
+<!-- Connection Details Panel -->
+<div class="conn-panel">
+    <div class="conn-panel-title">&#9654; Connection Details (Educational View)</div>
+    <div class="conn-grid">
+        <div class="conn-row">
+            <span class="conn-key">client_ip</span>
+            <span class="conn-val">{{ conn.client_ip }}</span>
+        </div>
+        <div class="conn-row">
+            <span class="conn-key">target_ip</span>
+            <span class="conn-val">{{ conn.target_ip }}</span>
+        </div>
+        <div class="conn-row">
+            <span class="conn-key">http_method</span>
+            <span class="conn-val">{{ conn.method }}</span>
+        </div>
+        <div class="conn-row">
+            <span class="conn-key">host</span>
+            <span class="conn-val">{{ conn.host }}</span>
+        </div>
+        <div class="conn-row">
+            <span class="conn-key">path</span>
+            <span class="conn-val">{{ conn.path }}</span>
+        </div>
+    </div>
+    <div class="conn-headers-title">&#9654; Request Headers</div>
+    <div class="conn-headers-grid">
+        {% for key, value in conn.headers.items() %}
+        <div class="conn-row">
+            <span class="conn-key">{{ key }}</span>
+            <span class="conn-val">{{ value }}</span>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2026 AcmeCorp Demo Environment &mdash; For Educational Purposes Only</p>
+</footer>
+
+</body>
+</html>

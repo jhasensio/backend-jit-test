@@ -1,47 +1,49 @@
-# Enterprise Mock Web Server
+# AcmeCorp Lab Environment
 
-A lightweight, Dockerized Python Flask web server designed to simulate a multi-departmental enterprise portal. This environment is built to generate localized, predictable HTTP traffic for testing network appliances, Web Application Firewalls (WAF), Deep Packet Inspection (DPI) rules, and load-balancing configurations without relying on external internet connectivity.
+A lightweight Python Flask web server that simulates three isolated enterprise department portals. Designed for educational use: demonstrates how HTTP traffic flows through network appliances (WAF, DPI, load balancers) and provides hands-on practice with common web attack vectors in a controlled, intentionally vulnerable environment.
+
+> ⚠ **Intentionally vulnerable. Do not deploy on a public network.**
 
 ## Features
 
-* **Complete Isolation:** Serves all static assets locally, preventing unwanted external CDN requests during packet capture and network inspection.
-* **Dynamic Routing:** Separate landing pages for each department (`/ENG`, `/HT`, `/FIN`), each with its own Jinja2 template and color theme.
-* **Visual Theming:** Dynamically injects CSS variables to change UI colors and content based on the requested HTTP path, making it easy to visually verify routing rules.
-* **Connection Details Panel:** Every page includes an educational debug panel displaying `client_ip`, `target_ip`, HTTP method, host, path, and all request headers — useful for demonstrating how HTTP traffic flows through network appliances.
-* **Lightweight:** Built on `python:3.11-slim` for rapid container deployment and teardown.
+* **Isolated Department Sites** — Three independent-looking portals (`/HT`, `/FIN`, `/ENG`), each with its own branding, color theme, and standalone navigation. No cross-links between sites — each simulates a separate web server.
+* **Ethical Hacking Lab** — Every department site has an **Attack** tab with live XSS and SQL injection exercises. The XSS sink reflects on that specific target's page; the SQLi sink runs against a real in-memory SQLite database.
+* **Connection Details Panel** — Every page shows a terminal-style debug window with `client_ip`, `target_ip`, HTTP method, host, path, and all request headers — demonstrating how requests appear to a backend server.
+* **Lab Selector Portal** — Root landing page (`/` or `/home`) acts as a control panel listing all three target systems and centralized attack exercise cards.
+* **Complete Isolation** — All assets served locally; no external CDN requests during packet capture or network inspection.
 
 ## Routes
 
-| Path      | Description               | Theme Color |
-|-----------|---------------------------|-------------|
-| `/`       | Landing Page              | Blue        |
-| `/HT`     | Human Talent Department   | Burgundy    |
-| `/FIN`    | Finance Department        | Green       |
-| `/ENG`    | Engineering Department    | Orange      |
-| `/search` | Employee Search (SQLi lab)| Purple      |
+| Path              | Description                              | Theme    |
+|-------------------|------------------------------------------|----------|
+| `/` or `/home`    | Lab selector — links to all targets      | Blue     |
+| `/HT`             | ACME People & Talent (HR portal)         | Burgundy |
+| `/FIN`            | ACME Financial Services                  | Green    |
+| `/ENG`            | ACME Engineering Systems                 | Orange   |
+| `/search`         | Employee directory — SQL injection sink  | Purple   |
+
+Each department route accepts `?tab=attack` to switch to the Attack tab, and `?q=` to trigger the XSS reflection.
 
 ## Ethical Hacking Lab
 
-> ⚠ **This server is intentionally vulnerable. Do not deploy it on a public network.**
-
-Two attack sinks are built in for hands-on practice:
+Two attack sinks are available on every department page (via the **Attack** tab) and on the landing page.
 
 ### Exercise 1 — Reflected XSS
 
-The `q` query parameter on `/` is reflected into the page using Jinja2's `| safe` filter, bypassing auto-escaping. Any HTML or JavaScript in the input is interpreted by the browser.
+The `q` query parameter is reflected into the page using Jinja2's `| safe` filter, bypassing auto-escaping. Any HTML or JavaScript is executed by the browser.
 
 | | |
 |---|---|
-| **Sink** | `/?q=` |
-| **Basic payload** | `<script>alert('XSS from AcmeCorp')</script>` |
-| **HTML payload** | `<b style='color:red'>Injected!</b>` |
-| **Attack URL** | `/?q=<script>alert('XSS from AcmeCorp')</script>` |
+| **Sink** | `/{dept}?tab=attack&q=` |
+| **Alert payload** | `<script>alert('XSS on HT')</script>` |
+| **HTML payload** | `<img src=x onerror=alert('img XSS')>` |
+| **Example URL** | `/HT?tab=attack&q=<script>alert(1)</script>` |
 
-**Expected result:** browser alert fires; the text inside `<b>` renders as bold red HTML.
+Works independently on each of the three target sites.
 
 ### Exercise 2 — SQL Injection
 
-The `/search` endpoint builds its SQLite query via string concatenation instead of parameterized queries. Injected SQL is executed directly against a live in-memory SQLite database seeded with 6 fake employee rows.
+The `/search` endpoint builds its SQLite query via string concatenation. Injected SQL runs against a live in-memory SQLite database seeded with 6 fake employee rows. The raw SQL string is always shown above the results.
 
 | | |
 |---|---|
@@ -49,37 +51,42 @@ The `/search` endpoint builds its SQLite query via string concatenation instead 
 | **Dump all rows** | `' OR '1'='1` |
 | **UNION extraction** | `' UNION SELECT id,name,role,salary,department FROM employees-- ` |
 
-**Expected result:** all rows returned; the raw SQL string is always displayed above the results table so students can see exactly what was injected.
+## Navigation
 
-The `/search` page also accepts normal input (e.g. `q=Alice`) to show the baseline query before injecting.
+* Every page has a **Home** link in the navigation pointing to `/home`.
+* The **AcmeCorp logo** in every header is also a clickable Home link.
+* Department footers include a `← Home` return link.
+* Each isolated site nav contains only dept-specific items — no links to other departments.
+
+## Connection Details Panel
+
+Shown at the bottom of every page:
+
+| Field | Source |
+|---|---|
+| `client_ip` | `X-Forwarded-For` header, fallback to `request.remote_addr` |
+| `target_ip` | Resolved hostname of the server |
+| `http_method` | `request.method` |
+| `host / path` | `request.host` / `request.path` |
+| Request Headers | Full `request.headers` dict |
 
 ## Project Structure
 
 ```text
-mock-server/
-├── app.py                      # Core Flask backend and routing logic
-├── Dockerfile                  # Container build instructions
-├── requirements.txt            # Python dependencies (Flask, Werkzeug)
-├── .gitignore                  # Standard ignore file for Python and macOS
+backend-jit-test/
+├── app.py                  # Flask routes and SQLite demo DB
+├── requirements.txt        # Flask, Werkzeug
+├── .gitignore
 ├── static/
-│   └── logo-inail.svg          # Local static asset for isolated testing
+│   └── logo-inail.svg
 └── templates/
-    ├── landing.html            # Root landing page with department cards + attack lab
-    ├── department.html         # Shared department template with connection panel
-    └── search.html             # SQL injection demo page
+    ├── landing.html        # Lab selector portal (/ and /home)
+    ├── ht.html             # ACME People & Talent — isolated site
+    ├── fin.html            # ACME Financial Services — isolated site
+    ├── eng.html            # ACME Engineering Systems — isolated site
+    ├── search.html         # SQL injection demo (/search)
+    └── department.html     # (legacy — unused)
 ```
-
-## Connection Details Panel
-
-Each page renders a terminal-style debug window at the bottom of the page showing live request metadata:
-
-* **client_ip** — source IP of the incoming request (respects `X-Forwarded-For`)
-* **target_ip** — resolved IP of the server host
-* **http_method** — HTTP verb used (`GET`, `POST`, etc.)
-* **host / path** — request host header and URL path
-* **Request Headers** — full list of all headers sent by the client
-
-This panel is intended for educational use to demonstrate how HTTP requests are structured and how they appear to a backend server.
 
 ## Usage
 
@@ -88,4 +95,4 @@ pip install -r requirements.txt
 python app.py
 ```
 
-The server listens on `0.0.0.0:8080` by default.
+Server listens on `0.0.0.0:8080` by default.

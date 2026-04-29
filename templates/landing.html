@@ -17,56 +17,66 @@
             border-bottom: 4px solid #004080;
             box-shadow: 0 2px 4px rgba(0,0,0,0.08);
         }
-        .logo-text {
-            font-size: 28px;
-            font-weight: 700;
-            color: #004080;
-            letter-spacing: -0.5px;
-        }
+        .logo-text { font-size: 28px; font-weight: 700; color: #004080; letter-spacing: -0.5px; }
         .logo-text span { color: #e63946; }
         .header-sub { color: #666; font-size: 13px; margin-top: 2px; }
 
         nav { background-color: #1a1a2e; overflow: hidden; }
         nav a {
-            float: left;
-            display: block;
-            color: #ccd6f6;
-            text-align: center;
-            padding: 14px 20px;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.2s;
+            float: left; display: block; color: #ccd6f6;
+            text-align: center; padding: 14px 20px; text-decoration: none;
+            font-size: 14px; transition: background 0.2s;
         }
         nav a:hover, nav a.active { background-color: #004080; color: white; }
 
+        /* Search bar */
+        .search-bar {
+            background: #e8edf2;
+            padding: 14px 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #d0d7de;
+        }
+        .search-bar label { font-size: 13px; color: #555; white-space: nowrap; }
+        .search-bar input[type=text] {
+            flex: 1; max-width: 420px; padding: 7px 12px;
+            border: 1px solid #c0c8d0; border-radius: 4px; font-size: 13px;
+        }
+        .search-bar button {
+            padding: 7px 18px; background: #004080; color: white;
+            border: none; border-radius: 4px; font-size: 13px; cursor: pointer;
+        }
+        .search-bar button:hover { background: #00306a; }
+
+        /* XSS reflected output */
+        .reflected-output {
+            background: #fffbe6;
+            border-left: 4px solid #f0a500;
+            padding: 10px 40px;
+            font-size: 13px;
+            color: #555;
+        }
+        .reflected-output .label { font-weight: 600; color: #a06000; margin-right: 6px; }
+
         .hero {
             background: linear-gradient(135deg, #004080 0%, #0066cc 100%);
-            color: white;
-            text-align: center;
-            padding: 60px 40px;
+            color: white; text-align: center; padding: 50px 40px;
         }
-        .hero h1 { font-size: 36px; margin-bottom: 12px; }
-        .hero p { font-size: 16px; opacity: 0.88; max-width: 600px; margin: 0 auto; }
+        .hero h1 { font-size: 34px; margin-bottom: 10px; }
+        .hero p { font-size: 15px; opacity: 0.88; max-width: 600px; margin: 0 auto; }
 
+        /* Department cards */
         .cards {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            padding: 40px;
-            flex-wrap: wrap;
-            max-width: 1100px;
-            margin: 0 auto;
+            display: flex; justify-content: center; gap: 24px;
+            padding: 36px 40px; flex-wrap: wrap;
+            max-width: 1100px; margin: 0 auto;
         }
         .card {
-            background: white;
-            border-radius: 8px;
+            background: white; border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            padding: 30px;
-            flex: 1;
-            min-width: 240px;
-            max-width: 300px;
-            text-decoration: none;
-            color: inherit;
+            padding: 28px; flex: 1; min-width: 220px; max-width: 290px;
+            text-decoration: none; color: inherit;
             transition: transform 0.2s, box-shadow 0.2s;
             border-top: 5px solid #004080;
         }
@@ -74,75 +84,100 @@
         .card.ht  { border-top-color: #800020; }
         .card.fin { border-top-color: #228B22; }
         .card.eng { border-top-color: #FF8C00; }
-        .card-icon { font-size: 36px; margin-bottom: 14px; }
-        .card h2 { font-size: 18px; margin-bottom: 8px; color: #222; }
+        .card-icon { font-size: 34px; margin-bottom: 12px; }
+        .card h2 { font-size: 17px; margin-bottom: 7px; color: #222; }
         .card p { font-size: 13px; color: #666; line-height: 1.5; }
         .card .badge {
-            display: inline-block;
-            margin-top: 14px;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            color: white;
+            display: inline-block; margin-top: 12px; padding: 3px 11px;
+            border-radius: 12px; font-size: 12px; font-weight: 600; color: white;
         }
         .card.ht  .badge { background: #800020; }
         .card.fin .badge { background: #228B22; }
         .card.eng .badge { background: #FF8C00; }
 
+        /* ── Ethical Hacking Lab section ── */
+        .lab-section {
+            max-width: 1100px; margin: 0 auto 24px; padding: 0 40px;
+        }
+        .lab-warning {
+            background: #fff3cd; border: 1px solid #ffc107;
+            border-radius: 6px; padding: 12px 18px; margin-bottom: 20px;
+            font-size: 13px; color: #856404; display: flex; align-items: center; gap: 10px;
+        }
+        .lab-warning strong { font-size: 14px; }
+        .lab-header {
+            font-size: 11px; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 1px; color: #888; margin-bottom: 14px;
+        }
+        .lab-cards { display: flex; gap: 20px; flex-wrap: wrap; }
+        .lab-card {
+            background: white; border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 22px 24px; flex: 1; min-width: 280px;
+        }
+        .lab-card.xss  { border-top: 5px solid #dc3545; }
+        .lab-card.sqli { border-top: 5px solid #6f42c1; }
+        .lab-card h3 { font-size: 15px; margin-bottom: 6px; }
+        .lab-card.xss  h3 { color: #dc3545; }
+        .lab-card.sqli h3 { color: #6f42c1; }
+        .lab-card .desc { font-size: 13px; color: #555; margin-bottom: 14px; line-height: 1.5; }
+        .lab-card .attack-label {
+            font-size: 11px; font-weight: 600; text-transform: uppercase;
+            letter-spacing: 0.5px; color: #888; margin-bottom: 5px;
+        }
+        .lab-card code {
+            display: block; background: #f6f8fa; border: 1px solid #d0d7de;
+            border-radius: 4px; padding: 8px 10px; font-size: 12px;
+            font-family: 'Courier New', monospace; color: #24292f;
+            word-break: break-all; margin-bottom: 10px;
+        }
+        .lab-card a.attack-link {
+            display: inline-block; padding: 6px 14px; border-radius: 4px;
+            font-size: 12px; font-weight: 600; text-decoration: none;
+            color: white; margin-right: 8px; margin-top: 4px;
+        }
+        .lab-card.xss  a.attack-link { background: #dc3545; }
+        .lab-card.sqli a.attack-link { background: #6f42c1; }
+        .lab-card a.attack-link:hover { opacity: 0.85; }
+        .lab-card .expected {
+            margin-top: 12px; font-size: 12px; color: #666;
+            background: #f0fff4; border-left: 3px solid #28a745;
+            padding: 6px 10px; border-radius: 0 4px 4px 0;
+        }
+
         /* ── Connection Details Panel ── */
         .conn-panel {
-            background: #0d1117;
-            color: #58a6ff;
-            font-family: 'Courier New', Courier, monospace;
-            font-size: 12px;
-            padding: 20px 40px;
-            margin: 20px 40px 80px;
-            border-radius: 8px;
-            border: 1px solid #30363d;
+            background: #0d1117; color: #58a6ff;
+            font-family: 'Courier New', Courier, monospace; font-size: 12px;
+            padding: 20px 40px; margin: 20px 40px 80px;
+            border-radius: 8px; border: 1px solid #30363d;
         }
         .conn-panel-title {
-            color: #8b949e;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 14px;
-            border-bottom: 1px solid #21262d;
-            padding-bottom: 8px;
+            color: #8b949e; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; margin-bottom: 14px;
+            border-bottom: 1px solid #21262d; padding-bottom: 8px;
         }
         .conn-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-            gap: 6px 30px;
-            margin-bottom: 14px;
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 6px 30px; margin-bottom: 14px;
         }
         .conn-row { display: flex; gap: 8px; }
         .conn-key { color: #7ee787; min-width: 130px; flex-shrink: 0; }
         .conn-val { color: #e6edf3; word-break: break-all; }
         .conn-headers-title {
-            color: #8b949e;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin: 14px 0 8px;
-            border-top: 1px solid #21262d;
-            padding-top: 10px;
+            color: #8b949e; font-size: 11px; text-transform: uppercase;
+            letter-spacing: 1px; margin: 14px 0 8px;
+            border-top: 1px solid #21262d; padding-top: 10px;
         }
         .conn-headers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
             gap: 4px 30px;
         }
 
         footer {
-            background-color: #1a1a2e;
-            color: #8892b0;
-            text-align: center;
-            padding: 14px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            font-size: 13px;
+            background-color: #1a1a2e; color: #8892b0;
+            text-align: center; padding: 14px; position: fixed;
+            bottom: 0; width: 100%; font-size: 13px;
         }
     </style>
 </head>
@@ -160,7 +195,23 @@
     <a href="/HT">Human Talent</a>
     <a href="/FIN">Finance</a>
     <a href="/ENG">Engineering</a>
+    <a href="/search">Employee Search</a>
 </nav>
+
+<!-- Search bar — reflected XSS sink (intentionally vulnerable) -->
+<div class="search-bar">
+    <label for="q">Portal Search:</label>
+    <form method="GET" action="/" style="display:flex;gap:8px;align-items:center;flex:1">
+        <input id="q" type="text" name="q" value="{{ q | e }}" placeholder="Try a name or a payload…" />
+        <button type="submit">Search</button>
+    </form>
+</div>
+
+{% if q %}
+<div class="reflected-output">
+    <span class="label">Search result for:</span>{{ q | safe }}
+</div>
+{% endif %}
 
 <div class="hero">
     <h1>Welcome to AcmeCorp Corporate Portal</h1>
@@ -188,30 +239,87 @@
     </a>
 </div>
 
+<!-- ── Ethical Hacking Lab ── -->
+<div class="lab-section">
+    <div class="lab-warning">
+        <span style="font-size:20px">⚠</span>
+        <div>
+            <strong>Ethical Hacking Lab — Educational Use Only</strong><br>
+            The vulnerabilities below are <em>intentional</em> and exist solely for learning purposes.
+            Do not deploy this server on a public network.
+        </div>
+    </div>
+
+    <div class="lab-header">Security Lab — Attack Exercises</div>
+
+    <div class="lab-cards">
+
+        <!-- XSS Card -->
+        <div class="lab-card xss">
+            <h3>🔴 Exercise 1 — Reflected XSS</h3>
+            <p class="desc">
+                The portal search reflects the <code>q</code> parameter directly into the HTML
+                without escaping. Any HTML or JavaScript in the input is executed by the browser.
+            </p>
+
+            <div class="attack-label">Payload</div>
+            <code>&lt;script&gt;alert('XSS from AcmeCorp')&lt;/script&gt;</code>
+
+            <div class="attack-label">Attack URL</div>
+            <code>/?q=&lt;script&gt;alert('XSS from AcmeCorp')&lt;/script&gt;</code>
+
+            <a class="attack-link" href="/?q=<script>alert('XSS from AcmeCorp')</script>">
+                ▶ Launch XSS
+            </a>
+            <a class="attack-link" href="/?q=<b style='color:red;font-size:18px'>HTML injected!</b>">
+                ▶ HTML Injection
+            </a>
+
+            <div class="expected">
+                ✔ Expected: browser alert fires / bold red text appears in the search result area.
+            </div>
+        </div>
+
+        <!-- SQLi Card -->
+        <div class="lab-card sqli">
+            <h3>🟣 Exercise 2 — SQL Injection</h3>
+            <p class="desc">
+                The <code>/search</code> endpoint builds its query by concatenating user input
+                directly into a SQL string. Injected SQL changes what the database returns.
+            </p>
+
+            <div class="attack-label">Payload — dump all rows</div>
+            <code>' OR '1'='1</code>
+
+            <div class="attack-label">Attack URL</div>
+            <code>/search?q=' OR '1'='1</code>
+
+            <a class="attack-link" href="/search?q=' OR '1'='1">▶ Dump All Rows</a>
+
+            <div class="attack-label" style="margin-top:14px">Payload — UNION extraction</div>
+            <code>' UNION SELECT id,name,role,salary,department FROM employees-- </code>
+
+            <a class="attack-link" href="/search?q=' UNION SELECT id,name,role,salary,department FROM employees-- ">
+                ▶ UNION Attack
+            </a>
+
+            <div class="expected">
+                ✔ Expected: all employee records returned; the raw SQL string is shown above the results so you can see exactly what was injected.
+            </div>
+        </div>
+
+    </div>
+</div>
+
 <!-- Connection Details Panel -->
 <div class="conn-panel">
     <div class="conn-panel-title">&#9654; Connection Details (Educational View)</div>
     <div class="conn-grid">
-        <div class="conn-row">
-            <span class="conn-key">client_ip</span>
-            <span class="conn-val">{{ conn.client_ip }}</span>
-        </div>
-        <div class="conn-row">
-            <span class="conn-key">target_ip</span>
-            <span class="conn-val">{{ conn.target_ip }}</span>
-        </div>
-        <div class="conn-row">
-            <span class="conn-key">http_method</span>
-            <span class="conn-val">{{ conn.method }}</span>
-        </div>
-        <div class="conn-row">
-            <span class="conn-key">host</span>
-            <span class="conn-val">{{ conn.host }}</span>
-        </div>
-        <div class="conn-row">
-            <span class="conn-key">path</span>
-            <span class="conn-val">{{ conn.path }}</span>
-        </div>
+        <div class="conn-row"><span class="conn-key">client_ip</span><span class="conn-val">{{ conn.client_ip }}</span></div>
+        <div class="conn-row"><span class="conn-key">target_ip</span><span class="conn-val">{{ conn.target_ip }}</span></div>
+        <div class="conn-row"><span class="conn-key">http_method</span><span class="conn-val">{{ conn.method }}</span></div>
+        <div class="conn-row"><span class="conn-key">host</span><span class="conn-val">{{ conn.host }}</span></div>
+        <div class="conn-row"><span class="conn-key">path</span><span class="conn-val">{{ conn.path }}</span></div>
     </div>
     <div class="conn-headers-title">&#9654; Request Headers</div>
     <div class="conn-headers-grid">

@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 import socket
+import sqlite3
 
 app = Flask(__name__)
 
@@ -18,9 +19,27 @@ def get_connection_info():
         'headers': dict(request.headers),
     }
 
+def get_demo_db():
+    conn = sqlite3.connect(':memory:')
+    conn.row_factory = sqlite3.Row
+    conn.execute('''CREATE TABLE employees (
+        id INTEGER PRIMARY KEY, name TEXT, department TEXT, role TEXT, salary INTEGER
+    )''')
+    conn.executemany('INSERT INTO employees VALUES (?,?,?,?,?)', [
+        (1, 'Alice Johnson',  'Engineering',   'Senior Engineer',    95000),
+        (2, 'Bob Smith',      'Finance',        'Financial Analyst',  82000),
+        (3, 'Carol White',    'Human Talent',   'HR Manager',         76000),
+        (4, 'David Brown',    'Engineering',    'DevOps Lead',        91000),
+        (5, 'Eve Davis',      'Finance',        'CFO',               148000),
+        (6, 'Frank Miller',   'Engineering',    'Security Engineer',  98000),
+    ])
+    conn.commit()
+    return conn
+
 @app.route('/')
 def landing():
-    return render_template('landing.html', conn=get_connection_info())
+    q = request.args.get('q', '')
+    return render_template('landing.html', q=q, conn=get_connection_info())
 
 @app.route('/HT')
 def ht_view():
@@ -49,6 +68,29 @@ def eng_view():
         dept_code="ENG",
         theme_color="#FF8C00",
         services=["SOC Monitoring", "Firewall & WAF Management", "Network Infrastructure", "Incident Response"],
+        conn=get_connection_info()
+    )
+
+# INTENTIONALLY VULNERABLE — educational SQL injection demo
+@app.route('/search')
+def search():
+    q = request.args.get('q', '')
+    results = []
+    # Unsafe string concatenation is the point — students can see and exploit this
+    sql = f"SELECT id, name, department, role, salary FROM employees WHERE name LIKE '%{q}%'"
+    error = None
+    if q:
+        try:
+            db = get_demo_db()
+            results = [dict(row) for row in db.execute(sql).fetchall()]
+            db.close()
+        except Exception as e:
+            error = str(e)
+    return render_template('search.html',
+        query=q,
+        sql=sql,
+        results=results,
+        error=error,
         conn=get_connection_info()
     )
 

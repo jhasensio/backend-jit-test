@@ -12,12 +12,46 @@ A lightweight, Dockerized Python Flask web server designed to simulate a multi-d
 
 ## Routes
 
-| Path   | Department        | Theme Color |
-|--------|-------------------|-------------|
-| `/`    | Landing Page      | Blue        |
-| `/HT`  | Human Talent      | Burgundy    |
-| `/FIN` | Finance           | Green       |
-| `/ENG` | Engineering       | Orange      |
+| Path      | Description               | Theme Color |
+|-----------|---------------------------|-------------|
+| `/`       | Landing Page              | Blue        |
+| `/HT`     | Human Talent Department   | Burgundy    |
+| `/FIN`    | Finance Department        | Green       |
+| `/ENG`    | Engineering Department    | Orange      |
+| `/search` | Employee Search (SQLi lab)| Purple      |
+
+## Ethical Hacking Lab
+
+> ⚠ **This server is intentionally vulnerable. Do not deploy it on a public network.**
+
+Two attack sinks are built in for hands-on practice:
+
+### Exercise 1 — Reflected XSS
+
+The `q` query parameter on `/` is reflected into the page using Jinja2's `| safe` filter, bypassing auto-escaping. Any HTML or JavaScript in the input is interpreted by the browser.
+
+| | |
+|---|---|
+| **Sink** | `/?q=` |
+| **Basic payload** | `<script>alert('XSS from AcmeCorp')</script>` |
+| **HTML payload** | `<b style='color:red'>Injected!</b>` |
+| **Attack URL** | `/?q=<script>alert('XSS from AcmeCorp')</script>` |
+
+**Expected result:** browser alert fires; the text inside `<b>` renders as bold red HTML.
+
+### Exercise 2 — SQL Injection
+
+The `/search` endpoint builds its SQLite query via string concatenation instead of parameterized queries. Injected SQL is executed directly against a live in-memory SQLite database seeded with 6 fake employee rows.
+
+| | |
+|---|---|
+| **Sink** | `/search?q=` |
+| **Dump all rows** | `' OR '1'='1` |
+| **UNION extraction** | `' UNION SELECT id,name,role,salary,department FROM employees-- ` |
+
+**Expected result:** all rows returned; the raw SQL string is always displayed above the results table so students can see exactly what was injected.
+
+The `/search` page also accepts normal input (e.g. `q=Alice`) to show the baseline query before injecting.
 
 ## Project Structure
 
@@ -30,8 +64,9 @@ mock-server/
 ├── static/
 │   └── logo-inail.svg          # Local static asset for isolated testing
 └── templates/
-    ├── landing.html            # Root landing page with department cards
-    └── department.html         # Shared department template with connection panel
+    ├── landing.html            # Root landing page with department cards + attack lab
+    ├── department.html         # Shared department template with connection panel
+    └── search.html             # SQL injection demo page
 ```
 
 ## Connection Details Panel

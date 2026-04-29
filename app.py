@@ -37,6 +37,7 @@ def get_demo_db():
     return conn
 
 @app.route('/')
+@app.route('/home')
 def landing():
     q = request.args.get('q', '')
     return render_template('landing.html', q=q, conn=get_connection_info())

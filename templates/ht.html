@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AcmeCorp People &amp; Talent</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #faf9f7; color: #2c2420; }
+
+        header {
+            background: #ffffff;
+            border-bottom: 4px solid #800020;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(44,36,32,0.07);
+        }
+        .logo-block .logo-text {
+            font-size: 24px;
+            color: #2c2420;
+            font-weight: 400;
+        }
+        .logo-block .logo-text strong {
+            color: #800020;
+            font-weight: 700;
+        }
+        .logo-block .logo-sub {
+            font-size: 13px;
+            color: #7a6c66;
+            margin-top: 2px;
+            font-style: italic;
+        }
+        .hr-badge {
+            background: #f5e6ea;
+            color: #800020;
+            border: 1px solid #e0c8ce;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 4px 12px;
+            border-radius: 4px;
+            letter-spacing: 0.5px;
+        }
+
+        nav {
+            background: #4a1028;
+            display: flex;
+        }
+        nav a {
+            display: block;
+            color: rgba(255,255,255,0.75);
+            text-decoration: none;
+            padding: 13px 20px;
+            font-size: 13px;
+            transition: background 0.15s, color 0.15s;
+        }
+        nav a:hover { background: rgba(255,255,255,0.10); color: white; }
+        nav a.active { background: #800020; color: white; }
+
+        .hero-strip {
+            background: linear-gradient(135deg, #800020 0%, #a0152e 100%);
+            padding: 28px 40px;
+        }
+        .hero-strip h1 { font-size: 22px; color: white; margin-bottom: 5px; }
+        .hero-strip p { font-size: 13px; color: rgba(255,255,255,0.85); }
+
+        .container { padding: 28px 40px; max-width: 1100px; margin: 0 auto; }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #b0a49e;
+            margin-bottom: 16px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 18px;
+        }
+        .service-card {
+            background: white;
+            border: 1px solid #e8e2da;
+            border-radius: 10px;
+            box-shadow: 0 1px 4px rgba(44,36,32,0.07);
+            padding: 24px;
+            transition: box-shadow 0.2s, transform 0.2s;
+        }
+        .service-card:hover {
+            box-shadow: 0 4px 14px rgba(44,36,32,0.12);
+            transform: translateY(-2px);
+        }
+        .svc-icon-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #f5e6ea;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            margin-bottom: 14px;
+        }
+        .svc-name { font-size: 15px; color: #2c2420; font-weight: 600; margin-bottom: 6px; }
+        .svc-desc { font-size: 12px; color: #7a6c66; line-height: 1.55; margin-bottom: 14px; }
+        .svc-link {
+            font-size: 12px;
+            font-weight: 600;
+            color: #800020;
+            text-decoration: none;
+        }
+        .svc-link:hover { text-decoration: underline; }
+
+        /* ── Connection Details Panel ── */
+        .conn-wrap { margin: 32px 40px 40px; border-radius: 8px; overflow: hidden; }
+        .conn-panel {
+            background: #0d1117;
+            color: #58a6ff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            padding: 20px;
+            border: 1px solid #30363d;
+        }
+        .conn-panel-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 8px;
+        }
+        .conn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 6px 30px;
+            margin-bottom: 14px;
+        }
+        .conn-row { display: flex; gap: 8px; }
+        .conn-key { color: #7ee787; min-width: 130px; flex-shrink: 0; }
+        .conn-val { color: #e6edf3; word-break: break-all; }
+        .conn-headers-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 14px 0 8px;
+            border-top: 1px solid #21262d;
+            padding-top: 10px;
+        }
+        .conn-headers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 4px 30px;
+        }
+
+        footer {
+            background: #f0ebe5;
+            border-top: 1px solid #e8e2da;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #b0a49e;
+        }
+        footer a {
+            color: #b0a49e;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        footer a:hover { color: #800020; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-block">
+        <div class="logo-text"><strong>AcmeCorp</strong> People &amp; Talent</div>
+        <div class="logo-sub">Empowering Our People</div>
+    </div>
+    <span class="hr-badge">HR PORTAL</span>
+</header>
+
+<nav>
+    <a href="#" class="active">Home</a>
+    <a href="#">Our People</a>
+    <a href="#">Benefits</a>
+    <a href="#">Careers</a>
+    <a href="#">Learning &amp; Dev</a>
+</nav>
+
+<div class="hero-strip">
+    <h1>Welcome to the People &amp; Talent Portal</h1>
+    <p>Manage HR services, benefits, and workforce planning from a single place.</p>
+</div>
+
+<div class="container">
+    <div class="section-label">HR Services</div>
+    <div class="services-grid">
+
+        <div class="service-card">
+            <div class="svc-icon-circle">👥</div>
+            <div class="svc-name">Attendance Management</div>
+            <div class="svc-desc">Track time, absences, and schedule adjustments across all teams.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
+        </div>
+
+        <div class="service-card">
+            <div class="svc-icon-circle">💳</div>
+            <div class="svc-name">Payroll Processing</div>
+            <div class="svc-desc">Run payroll cycles, view payslips, and manage deductions securely.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
+        </div>
+
+        <div class="service-card">
+            <div class="svc-icon-circle">🎁</div>
+            <div class="svc-name">Employee Benefits</div>
+            <div class="svc-desc">Enroll in health, dental, wellness, and retirement programs.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
+        </div>
+
+        <div class="service-card">
+            <div class="svc-icon-circle">🏢</div>
+            <div class="svc-name">Recruitment &amp; Onboarding</div>
+            <div class="svc-desc">Open requisitions, candidate pipeline, and new hire workflows.</div>
+            <a class="svc-link" href="#">Access &rarr;</a>
+        </div>
+
+    </div>
+</div>
+
+<!-- Connection Details Panel -->
+<div class="conn-wrap">
+    <div class="conn-panel">
+        <div class="conn-panel-title">&#9654; Connection Details (Educational View)</div>
+        <div class="conn-grid">
+            <div class="conn-row"><span class="conn-key">client_ip</span><span class="conn-val">{{ conn.client_ip }}</span></div>
+            <div class="conn-row"><span class="conn-key">target_ip</span><span class="conn-val">{{ conn.target_ip }}</span></div>
+            <div class="conn-row"><span class="conn-key">http_method</span><span class="conn-val">{{ conn.method }}</span></div>
+            <div class="conn-row"><span class="conn-key">host</span><span class="conn-val">{{ conn.host }}</span></div>
+            <div class="conn-row"><span class="conn-key">path</span><span class="conn-val">{{ conn.path }}</span></div>
+        </div>
+        <div class="conn-headers-title">&#9654; Request Headers</div>
+        <div class="conn-headers-grid">
+            {% for key, value in conn.headers.items() %}
+            <div class="conn-row">
+                <span class="conn-key">{{ key }}</span>
+                <span class="conn-val">{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer>
+    <span>&copy; 2026 AcmeCorp People &amp; Talent &mdash; Confidential</span>
+    <a href="/">&#8592; Lab Selector</a>
+</footer>
+
+</body>
+</html>

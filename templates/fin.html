@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ACME Financial Services</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: Arial, sans-serif; background: #f4f7f4; color: #1a2e1a; }
+
+        header {
+            background: #ffffff;
+            border-bottom: 4px solid #228B22;
+            padding: 18px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 4px rgba(26,46,26,0.06);
+        }
+        .logo-block .logo-text {
+            font-size: 22px;
+            font-weight: 400;
+            color: #1a2e1a;
+            letter-spacing: 0.5px;
+        }
+        .logo-block .logo-text strong {
+            color: #228B22;
+            font-weight: 800;
+        }
+        .logo-block .logo-sub {
+            font-size: 12px;
+            color: #4a6e4a;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
+        }
+        .header-pills { display: flex; gap: 8px; align-items: center; }
+        .hpill {
+            font-size: 11px;
+            padding: 3px 10px;
+            border-radius: 4px;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        .hpill.secure { background: #e8f5e8; color: #228B22; border: 1px solid #c0d8c0; }
+        .hpill.period { background: #f0f4f0; color: #4a6e4a; border: 1px solid #d4e4d4; }
+
+        nav {
+            background: #1a3a1a;
+            display: flex;
+        }
+        nav a {
+            display: block;
+            color: rgba(255,255,255,0.70);
+            text-decoration: none;
+            padding: 12px 20px;
+            font-size: 13px;
+            transition: background 0.15s, color 0.15s;
+        }
+        nav a:hover { background: rgba(34,139,34,0.3); color: white; }
+        nav a.active { background: #228B22; color: white; }
+
+        .dept-banner {
+            background: #228B22;
+            padding: 22px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .dept-banner-left h1 { font-size: 20px; color: white; margin-bottom: 3px; }
+        .dept-banner-left p { font-size: 12px; color: rgba(255,255,255,0.80); }
+        .banner-status {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            font-size: 12px;
+            padding: 5px 14px;
+            border-radius: 3px;
+        }
+        .banner-status::before { content: "● "; color: #a8ffa8; }
+
+        .content-layout {
+            display: flex;
+            gap: 24px;
+            padding: 28px 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            align-items: flex-start;
+        }
+        .services-col { flex: 7; }
+        .widget-col { flex: 3; min-width: 220px; }
+
+        .section-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #8aaa8a;
+            margin-bottom: 10px;
+        }
+
+        /* Services list */
+        .service-row {
+            display: flex;
+            align-items: center;
+            padding: 14px 0;
+            border-bottom: 1px solid #d4e4d4;
+            gap: 14px;
+        }
+        .service-row:last-child { border-bottom: none; }
+        .svc-icon {
+            width: 36px;
+            height: 36px;
+            background: #e8f5e8;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+        .svc-info { flex: 1; }
+        .svc-name { font-size: 14px; color: #1a2e1a; font-weight: 600; margin-bottom: 2px; }
+        .svc-desc { font-size: 11px; color: #4a6e4a; line-height: 1.4; }
+        .svc-badge {
+            background: #e8f5e8;
+            color: #228B22;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        /* Summary widget */
+        .summary-widget {
+            background: white;
+            border: 1px solid #d4e4d4;
+            border-top: 3px solid #228B22;
+            border-radius: 8px;
+            padding: 20px;
+        }
+        .widget-title {
+            font-size: 11px;
+            color: #8aaa8a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+        .widget-row {
+            padding: 10px 0;
+            border-bottom: 1px solid #e8f5e8;
+        }
+        .widget-row:last-of-type { border-bottom: none; }
+        .widget-key { font-size: 11px; color: #4a6e4a; margin-bottom: 2px; }
+        .widget-val { font-size: 13px; color: #1a2e1a; font-weight: 600; }
+        .widget-val.ok::before { content: "● "; color: #228B22; font-size: 10px; }
+        .widget-cta {
+            display: block;
+            background: #e8f5e8;
+            color: #228B22;
+            border: 1px solid #c0d8c0;
+            border-radius: 4px;
+            text-align: center;
+            padding: 8px;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            margin-top: 14px;
+            transition: background 0.15s;
+        }
+        .widget-cta:hover { background: #d0eccc; }
+
+        /* ── Connection Details Panel ── */
+        .conn-wrap { margin: 8px 40px 40px; border-radius: 8px; overflow: hidden; }
+        .conn-panel {
+            background: #0d1117;
+            color: #58a6ff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 12px;
+            padding: 20px;
+            border: 1px solid #30363d;
+        }
+        .conn-panel-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #21262d;
+            padding-bottom: 8px;
+        }
+        .conn-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 6px 30px;
+            margin-bottom: 14px;
+        }
+        .conn-row { display: flex; gap: 8px; }
+        .conn-key { color: #7ee787; min-width: 130px; flex-shrink: 0; }
+        .conn-val { color: #e6edf3; word-break: break-all; }
+        .conn-headers-title {
+            color: #8b949e;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 14px 0 8px;
+            border-top: 1px solid #21262d;
+            padding-top: 10px;
+        }
+        .conn-headers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 4px 30px;
+        }
+
+        footer {
+            background: #eaf2ea;
+            border-top: 1px solid #d4e4d4;
+            padding: 14px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+            color: #8aaa8a;
+        }
+        footer a {
+            color: #8aaa8a;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        footer a:hover { color: #228B22; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="logo-block">
+        <div class="logo-text"><strong>ACME</strong> Financial Services</div>
+        <div class="logo-sub">Secure. Accurate. Trusted.</div>
+    </div>
+    <div class="header-pills">
+        <span class="hpill secure">&#10003; SECURE CONNECTION</span>
+        <span class="hpill period">FY2026 Q1</span>
+    </div>
+</header>
+
+<nav>
+    <a href="#" class="active">Overview</a>
+    <a href="#">Accounts</a>
+    <a href="#">Reports</a>
+    <a href="#">Invoicing</a>
+    <a href="#">Audit &amp; Compliance</a>
+</nav>
+
+<div class="dept-banner">
+    <div class="dept-banner-left">
+        <h1>Financial Services Portal</h1>
+        <p>Q1 2026 &mdash; Period Open</p>
+    </div>
+    <span class="banner-status">All Systems Nominal</span>
+</div>
+
+<div class="content-layout">
+
+    <!-- Services list -->
+    <div class="services-col">
+        <div class="section-label">Available Services</div>
+
+        <div class="service-row">
+            <div class="svc-icon">📄</div>
+            <div class="svc-info">
+                <div class="svc-name">Electronic Invoicing</div>
+                <div class="svc-desc">Issue, track, and reconcile invoices with fiscal compliance.</div>
+            </div>
+            <span class="svc-badge">ACTIVE</span>
+        </div>
+
+        <div class="service-row">
+            <div class="svc-icon">📊</div>
+            <div class="svc-info">
+                <div class="svc-name">Financial Statements</div>
+                <div class="svc-desc">Generate period-end P&amp;L, balance sheet, and cash flow reports.</div>
+            </div>
+            <span class="svc-badge">ACTIVE</span>
+        </div>
+
+        <div class="service-row">
+            <div class="svc-icon">💼</div>
+            <div class="svc-info">
+                <div class="svc-name">Expense Reporting</div>
+                <div class="svc-desc">Submit, approve, and reimburse employee expense claims.</div>
+            </div>
+            <span class="svc-badge">ACTIVE</span>
+        </div>
+
+        <div class="service-row">
+            <div class="svc-icon">🔍</div>
+            <div class="svc-info">
+                <div class="svc-name">Internal Audit</div>
+                <div class="svc-desc">Policy compliance checks, GL reconciliation, and variance analysis.</div>
+            </div>
+            <span class="svc-badge">ACTIVE</span>
+        </div>
+    </div>
+
+    <!-- Summary widget -->
+    <div class="widget-col">
+        <div class="section-label">Period Summary</div>
+        <div class="summary-widget">
+            <div class="widget-title">Period Summary</div>
+            <div class="widget-row">
+                <div class="widget-key">Fiscal Period</div>
+                <div class="widget-val">Q1 2026 (Open)</div>
+            </div>
+            <div class="widget-row">
+                <div class="widget-key">Ledger Status</div>
+                <div class="widget-val ok">Reconciled</div>
+            </div>
+            <div class="widget-row">
+                <div class="widget-key">Last Sync</div>
+                <div class="widget-val">Today 09:14 UTC</div>
+            </div>
+            <a class="widget-cta" href="#">View Full Report &rarr;</a>
+        </div>
+    </div>
+
+</div>
+
+<!-- Connection Details Panel -->
+<div class="conn-wrap">
+    <div class="conn-panel">
+        <div class="conn-panel-title">&#9654; Connection Details (Educational View)</div>
+        <div class="conn-grid">
+            <div class="conn-row"><span class="conn-key">client_ip</span><span class="conn-val">{{ conn.client_ip }}</span></div>
+            <div class="conn-row"><span class="conn-key">target_ip</span><span class="conn-val">{{ conn.target_ip }}</span></div>
+            <div class="conn-row"><span class="conn-key">http_method</span><span class="conn-val">{{ conn.method }}</span></div>
+            <div class="conn-row"><span class="conn-key">host</span><span class="conn-val">{{ conn.host }}</span></div>
+            <div class="conn-row"><span class="conn-key">path</span><span class="conn-val">{{ conn.path }}</span></div>
+        </div>
+        <div class="conn-headers-title">&#9654; Request Headers</div>
+        <div class="conn-headers-grid">
+            {% for key, value in conn.headers.items() %}
+            <div class="conn-row">
+                <span class="conn-key">{{ key }}</span>
+                <span class="conn-val">{{ value }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<footer>
+    <span>&copy; 2026 ACME Financial Services &mdash; Internal Use Only</span>
+    <a href="/">&#8592; Lab Selector</a>
+</footer>
+
+</body>
+</html>

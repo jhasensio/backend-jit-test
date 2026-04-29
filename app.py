@@ -43,33 +43,15 @@ def landing():
 
 @app.route('/HT')
 def ht_view():
-    return render_template('department.html',
-        dept_name="Human Talent Department",
-        dept_code="HT",
-        theme_color="#800020",
-        services=["Attendance Management", "Payroll Processing", "Employee Benefits", "Recruitment & Onboarding"],
-        conn=get_connection_info()
-    )
+    return render_template('ht.html', conn=get_connection_info())
 
 @app.route('/FIN')
 def fin_view():
-    return render_template('department.html',
-        dept_name="Finance Department",
-        dept_code="FIN",
-        theme_color="#228B22",
-        services=["Electronic Invoicing", "Financial Statements", "Expense Reporting", "Internal Audit"],
-        conn=get_connection_info()
-    )
+    return render_template('fin.html', conn=get_connection_info())
 
 @app.route('/ENG')
 def eng_view():
-    return render_template('department.html',
-        dept_name="Engineering Department",
-        dept_code="ENG",
-        theme_color="#FF8C00",
-        services=["SOC Monitoring", "Firewall & WAF Management", "Network Infrastructure", "Incident Response"],
-        conn=get_connection_info()
-    )
+    return render_template('eng.html', conn=get_connection_info())
 
 # INTENTIONALLY VULNERABLE — educational SQL injection demo
 @app.route('/search')

@@ -1,8 +1,22 @@
 from flask import Flask, render_template, request
+import os
 import socket
 import sqlite3
 
 app = Flask(__name__)
+
+# Auth portal used by static/jit-guard.js to tell a ban from an outage (empty disables the guard).
+PORTAL_URL = os.environ.get("PORTAL_URL", "").rstrip("/")
+
+
+@app.context_processor
+def inject_portal():
+    return {"portal_url": PORTAL_URL}
+
+
+@app.route('/healthz')
+def healthz():
+    return 'ok', 200, {'Cache-Control': 'no-store'}
 
 def get_connection_info():
     client_ip = request.headers.get('X-Forwarded-For', request.remote_addr)

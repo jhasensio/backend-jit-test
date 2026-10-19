@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, abort, render_template, request
 import os
 import socket
 import sqlite3
@@ -76,6 +76,74 @@ def eng_view():
         q=request.args.get('q', ''),
         tab=request.args.get('tab', 'home'),
         conn=get_connection_info())
+
+# Stub service modules behind the "Access" tiles: one generic page per (site, service) with fake rows.
+SITES = {
+    'HT':  {'name': 'ACME People & Talent',      'accent': '#8b2942', 'dark': '#3a1220'},
+    'FIN': {'name': 'ACME Financial Services',   'accent': '#228B22', 'dark': '#0d2e0d'},
+    'ENG': {'name': 'ACME Engineering Systems',  'accent': '#c76a10', 'dark': '#3a2408'},
+}
+SERVICES = {
+    'FIN': {
+        'invoicing': ('Electronic Invoicing', ['Invoice', 'Customer', 'Amount', 'Status'], [
+            ('INV-2026-0141', 'Northwind Ltd', '12,400.00', 'Paid'),
+            ('INV-2026-0142', 'Contoso SpA', '3,980.50', 'Sent'),
+            ('INV-2026-0143', 'Fabrikam Inc', '27,150.00', 'Overdue'),
+            ('INV-2026-0144', 'Globex Corp', '810.00', 'Draft')]),
+        'statements': ('Financial Statements', ['Report', 'Period', 'Prepared by', 'Status'], [
+            ('Profit & Loss', 'Q1 2026', 'B. Smith', 'Final'),
+            ('Balance Sheet', 'Q1 2026', 'B. Smith', 'In review'),
+            ('Cash Flow', 'Q1 2026', 'E. Davis', 'Draft')]),
+        'expenses': ('Expense Reporting', ['Claim', 'Employee', 'Amount', 'Status'], [
+            ('EXP-9021', 'A. Johnson', '412.30', 'Approved'),
+            ('EXP-9022', 'D. Brown', '96.00', 'Pending'),
+            ('EXP-9023', 'F. Miller', '1,240.75', 'Rejected')]),
+        'audit': ('Internal Audit', ['Check', 'Scope', 'Findings', 'Status'], [
+            ('GL reconciliation', 'Accounts payable', '2', 'Open'),
+            ('Variance analysis', 'Opex Q1', '0', 'Closed'),
+            ('Policy compliance', 'Procurement', '1', 'Open')]),
+    },
+    'HT': {
+        'attendance': ('Attendance Management', ['Employee', 'Team', 'Days present', 'Absences'], [
+            ('A. Johnson', 'Engineering', '19', '1'), ('B. Smith', 'Finance', '20', '0'),
+            ('C. White', 'Human Talent', '18', '2')]),
+        'payroll': ('Payroll Processing', ['Cycle', 'Employees', 'Gross', 'Status'], [
+            ('2026-03', '6', '590,000', 'Paid'), ('2026-04', '6', '590,000', 'Processing')]),
+        'benefits': ('Employee Benefits', ['Program', 'Enrolled', 'Provider', 'Status'], [
+            ('Health', '6', 'MediCare Plus', 'Active'), ('Dental', '4', 'SmileCo', 'Active'),
+            ('Retirement', '5', 'FutureFund', 'Open enrollment')]),
+        'recruitment': ('Recruitment & Onboarding', ['Requisition', 'Role', 'Candidates', 'Stage'], [
+            ('REQ-311', 'SRE', '14', 'Interviews'), ('REQ-312', 'Financial Analyst', '9', 'Screening'),
+            ('REQ-313', 'HR Partner', '3', 'Offer')]),
+    },
+    'ENG': {
+        'soc': ('SOC Monitoring', ['Alert', 'Source', 'Severity', 'Status'], [
+            ('Port scan', '10.20.4.17', 'Medium', 'Triaged'), ('Brute force', '10.20.9.3', 'High', 'Open'),
+            ('Malware beacon', '10.20.2.88', 'Critical', 'Escalated')]),
+        'firewall': ('Firewall & WAF', ['Rule', 'Action', 'Hits (24h)', 'State'], [
+            ('Block SQLi patterns', 'Deny', '312', 'Enabled'), ('Allow web egress', 'Allow', '48,201', 'Enabled'),
+            ('Geo block', 'Deny', '77', 'Disabled')]),
+        'network': ('Network Infrastructure', ['Device', 'Role', 'Uptime', 'Status'], [
+            ('core-sw-01', 'Core switch', '212 d', 'Up'), ('edge-rtr-01', 'BGP uplink', '98 d', 'Up'),
+            ('dhcp-01', 'DHCP', '41 d', 'Degraded')]),
+        'incidents': ('Incident Response', ['Ticket', 'Title', 'Owner', 'SLA'], [
+            ('IR-502', 'Credential stuffing', 'F. Miller', 'On track'),
+            ('IR-503', 'Phishing campaign', 'A. Johnson', 'At risk'),
+            ('IR-498', 'Lost laptop', 'D. Brown', 'Closed')]),
+    },
+}
+
+
+@app.route('/<site>/<service>')
+def module_view(site, service):
+    site = site.upper()
+    spec = SERVICES.get(site, {}).get(service)
+    if not spec:
+        abort(404)
+    title, cols, rows = spec
+    return render_template('module.html', site_key=site, site=SITES[site], title=title,
+                           cols=cols, rows=rows, conn=get_connection_info())
+
 
 # INTENTIONALLY VULNERABLE — educational SQL injection demo
 @app.route('/search')

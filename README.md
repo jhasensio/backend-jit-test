@@ -21,6 +21,8 @@ A lightweight Python Flask web server that simulates three isolated enterprise d
 | `/FIN`            | ACME Financial Services                  | Green    |
 | `/ENG`            | ACME Engineering Systems                 | Orange   |
 | `/search`         | Employee directory — SQL injection sink  | Purple   |
+| `/<site>/<service>` | Stub service pages (e.g. `/FIN/invoicing`) behind the Access tiles | Site colour |
+| `/api/search`     | JSON twin of `/search` (verdict, SQL, rows) used by the Attack tab | — |
 
 Each department route accepts `?tab=attack` to switch to the Attack tab, and `?q=` to trigger the XSS reflection.
 
@@ -43,7 +45,7 @@ Works independently on each of the three target sites.
 
 ### Exercise 2 — SQL Injection
 
-The `/search` endpoint builds its SQLite query via string concatenation. Injected SQL runs against a live in-memory SQLite database seeded with 6 fake employee rows. The raw SQL string is always shown above the results.
+The `/search` endpoint builds its SQLite query via string concatenation. Injected SQL runs against a live in-memory SQLite database seeded with 6 fake employee rows. The raw SQL string is always shown above the results, with a verdict (injection succeeded / SQL error leaked / no effect). On the Attack tab the result appears inline in the exercise card.
 
 | | |
 |---|---|
@@ -96,3 +98,7 @@ python app.py
 ```
 
 Server listens on `0.0.0.0:8080` by default.
+
+## Ban behaviour
+
+`static/jit-guard.js` blocks the page with a full-screen "Access suspended" overlay as soon as the portal reports the client as banned (checked on load, every second, on bfcache restore, and right after a failed attack request), then redirects to the portal after 10 s. All responses are `Cache-Control: no-store`.

@@ -1,4 +1,4 @@
-from flask import Flask, abort, render_template, request
+from flask import Flask, abort, jsonify, render_template, request
 import os
 import socket
 import sqlite3
@@ -152,28 +152,53 @@ def module_view(site, service):
                            cols=cols, rows=rows, conn=get_connection_info())
 
 
+def run_search(q):
+    """Run the vulnerable query and a safe parameterised twin; the verdict compares the two."""
+    # Unsafe string concatenation is the point — students can see and exploit this
+    sql = f"SELECT id, name, department, role, salary FROM employees WHERE name LIKE '%{q}%'"
+    results, error, expected = [], None, 0
+    if q:
+        db = get_demo_db()
+        try:
+            expected = len(db.execute("SELECT id FROM employees WHERE name LIKE ?", (f'%{q}%',)).fetchall())
+            results = [dict(row) for row in db.execute(sql).fetchall()]
+        except Exception as e:
+            error = str(e)
+        db.close()
+    if not q:
+        verdict = None
+    elif error:
+        verdict = {'level': 'error', 'text': f'SQL error leaked: the input reached the database ({error}).'}
+    elif len(results) > expected:
+        verdict = {'level': 'success',
+                   'text': f'Injection succeeded: {len(results)} row(s) returned where a plain search gives {expected}.'}
+    else:
+        verdict = {'level': 'none',
+                   'text': f'No injection effect: {len(results)} row(s), same as a plain search.'}
+    return sql, results, error, verdict
+
+
 # INTENTIONALLY VULNERABLE — educational SQL injection demo
 @app.route('/search')
 def search():
     q = request.args.get('q', '')
-    results = []
-    # Unsafe string concatenation is the point — students can see and exploit this
-    sql = f"SELECT id, name, department, role, salary FROM employees WHERE name LIKE '%{q}%'"
-    error = None
-    if q:
-        try:
-            db = get_demo_db()
-            results = [dict(row) for row in db.execute(sql).fetchall()]
-            db.close()
-        except Exception as e:
-            error = str(e)
+    sql, results, error, verdict = run_search(q)
     return render_template('search.html',
         query=q,
         sql=sql,
         results=results,
         error=error,
+        verdict=verdict,
         conn=get_connection_info()
     )
+
+
+@app.route('/api/search')
+def api_search():
+    """Same sink as /search, as JSON, for the inline result box on the Attack tab."""
+    sql, results, error, verdict = run_search(request.args.get('q', ''))
+    return jsonify(sql=sql, rows=results, error=error, verdict=verdict)
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)

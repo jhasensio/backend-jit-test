@@ -128,6 +128,10 @@
             text-align: center; padding: 14px; position: fixed;
             bottom: 0; width: 100%; font-size: 13px;
         }
+            .verdict { padding: 12px 16px; border-radius: 6px; margin-bottom: 16px; font-size: 14px; font-weight: 600; }
+        .verdict.success { background: #dc3545; color: #fff; }
+        .verdict.error { background: #b45309; color: #fff; }
+        .verdict.none { background: #e5e7eb; color: #374151; }
     </style>
 </head>
 <body>
@@ -166,6 +170,10 @@
         <div class="sql-block-label">&#9654; Constructed SQL Query (sent to database)</div>
         <code>{{ sql }}</code>
     </div>
+
+    {% if verdict %}
+    <div class="verdict {{ verdict.level }}">{{ verdict.text }}</div>
+    {% endif %}
 
     {% if error %}
     <div class="error-box">

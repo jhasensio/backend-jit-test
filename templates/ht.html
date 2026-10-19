@@ -263,10 +263,10 @@
             Injected SQL runs against a live in-memory SQLite database. The raw query is always shown.</p>
             <div class="attack-label">Payload — dump all rows</div>
             <code>' OR '1'='1</code>
-            <a class="attack-btn purple" href="/search?q=' OR '1'='1">▶ Dump All Rows</a>
+            <a class="attack-btn purple" data-sqli="' OR '1'='1" href="/search?q=' OR '1'='1">▶ Dump All Rows</a>
             <div class="attack-label" style="margin-top:12px">Payload — UNION extraction</div>
             <code>' UNION SELECT id,name,role,salary,department FROM employees-- </code>
-            <a class="attack-btn purple" href="/search?q=' UNION SELECT id,name,role,salary,department FROM employees-- ">▶ UNION Attack</a>
+            <a class="attack-btn purple" data-sqli="' UNION SELECT id,name,role,salary,department FROM employees-- " href="/search?q=' UNION SELECT id,name,role,salary,department FROM employees-- ">▶ UNION Attack</a>
             <div class="expected">✔ Expected: all employee records returned; raw SQL shows the injection.</div>
         </div>
 
@@ -301,6 +301,7 @@
     <a href="/home">&#8592; Home</a>
 </footer>
 
+<script src="/static/sqli-lab.js"></script>
 <script src="/static/jit-guard.js" data-portal="{{ portal_url }}"></script>
 </body>
 </html>

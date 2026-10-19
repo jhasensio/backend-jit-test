@@ -9,6 +9,13 @@ app = Flask(__name__)
 PORTAL_URL = os.environ.get("PORTAL_URL", "").rstrip("/")
 
 
+@app.after_request
+def no_store(resp):
+    # A cached page would keep looking alive after a ban; always ask the server.
+    resp.headers['Cache-Control'] = 'no-store'
+    return resp
+
+
 @app.context_processor
 def inject_portal():
     return {"portal_url": PORTAL_URL}

@@ -212,6 +212,12 @@
             padding: 14px 40px; font-size: 12px;
             color: #9ca3af; text-align: center;
         }
+        .setup { background: #fffbeb; border: 1px solid #f59e0b; border-radius: 8px; padding: 16px 22px; margin-top: 30px; font-size: 13px; line-height: 1.6; color: #44403c; }
+        .setup summary { cursor: pointer; font-weight: 700; color: #92400e; font-size: 14px; }
+        .setup h4 { margin: 14px 0 4px; font-size: 13px; color: #92400e; }
+        .setup code { background: #fef3c7; padding: 1px 5px; border-radius: 3px; font-size: 12px; }
+        .setup table { border-collapse: collapse; margin: 6px 0; }
+        .setup td, .setup th { border: 1px solid #e7d9a8; padding: 4px 10px; text-align: left; font-size: 12px; }
     </style>
 </head>
 <body>
@@ -333,6 +339,36 @@
         </div>
 
     </div>
+
+    <details class="setup" open>
+        <summary>&#9881; Load balancer setup &mdash; read this before the demo</summary>
+        <p style="margin-top:8px"><strong>Why:</strong> this one backend serves all three sites under different paths
+        (<code>/HT</code>, <code>/FIN</code>, <code>/ENG</code>) to keep the lab small. In production each site would be
+        its own application or server. Publish each site on its own hostname and let the load balancer map the
+        hostname to its path, otherwise the pages beyond the first one cannot be reached.</p>
+
+        <h4>HTTP Request policy (one per virtual service, e.g. Avi)</h4>
+        <p>Keep the ban <code>REJECT</code> rule first. Then add one rewrite rule per site:</p>
+        <table>
+            <tr><th>Host header equals</th><th>Path does not contain</th><th>Action</th></tr>
+            <tr><td><code>finance.example.lab</code></td><td><code>/FIN</code> <code>/static</code> <code>/healthz</code> <code>/search</code> <code>/api</code></td><td>Rewrite URL path to <code>/FIN</code></td></tr>
+            <tr><td><code>hr.example.lab</code></td><td><code>/HT</code> <code>/static</code> <code>/healthz</code> <code>/search</code> <code>/api</code></td><td>Rewrite URL path to <code>/HT</code></td></tr>
+            <tr><td><code>eng.example.lab</code></td><td><code>/ENG</code> <code>/static</code> <code>/healthz</code> <code>/search</code> <code>/api</code></td><td>Rewrite URL path to <code>/ENG</code></td></tr>
+        </table>
+
+        <h4>Paths that must reach the backend unchanged</h4>
+        <p><code>/&lt;SITE&gt;/&hellip;</code> (service pages), <code>/search</code> (SQLi page), <code>/api/search</code>
+        (inline SQLi result), <code>/static/&hellip;</code> (guard and lab scripts) and <code>/healthz</code> (ban heartbeat).
+        A rule that rewrites everything breaks the attack results and hides the ban.</p>
+
+        <h4>Symptoms</h4>
+        <ul style="margin-left:18px">
+            <li>Every link returns the site's home page &rarr; the rewrite rule has no path exclusions.</li>
+            <li>Inline SQLi box says &ldquo;Request blocked&rdquo; without a ban &rarr; <code>/api</code> is not excluded.</li>
+            <li>Ban is never noticed &rarr; <code>/healthz</code> is rewritten (it must return <code>ok</code>) or the portal URL is not set (<code>PORTAL_URL</code>).</li>
+            <li>Other sites reachable on this hostname (e.g. <code>/ENG</code> on the finance host) &rarr; expected; add a deny rule per host if you want real isolation.</li>
+        </ul>
+    </details>
 
 </div>
 

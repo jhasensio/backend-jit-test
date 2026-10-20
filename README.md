@@ -99,6 +99,30 @@ python app.py
 
 Server listens on `0.0.0.0:8080` by default.
 
+## Load balancer (Avi) policy
+
+This backend hosts the three sites as paths of one server, which is a lab shortcut, not a production pattern: in production each site would be its own application. Publish one hostname per site and map it to its path with an HTTP Request policy on the virtual service. The same instructions are shown on the home page.
+
+Keep the ban `REJECT` rule first, then one rewrite rule per site:
+
+| Match | Action |
+|-------|--------|
+| Host header equals `finance.example.lab` and path contains none of `/FIN`, `/static`, `/healthz`, `/search`, `/api` | Rewrite URL path to `/FIN` |
+| Same with `hr.example.lab` and `/HT` in place of `/FIN` | Rewrite URL path to `/HT` |
+| Same with `eng.example.lab` and `/ENG` in place of `/FIN` | Rewrite URL path to `/ENG` |
+
+A rule without the path exclusions rewrites everything to the site root, so no link, attack result or health check gets through.
+
+| Path | Why it must pass unchanged |
+|------|----------------------------|
+| `/<SITE>/...` | stub service pages |
+| `/search` | SQL injection page |
+| `/api/search` | inline SQLi result (a rewrite returns HTML and the box reports "Request blocked") |
+| `/static/...` | `jit-guard.js`, `sqli-lab.js` |
+| `/healthz` | ban heartbeat; must answer `ok` |
+
+`/home` is left to be rewritten, so the logo returns users to their own site. Other sites stay reachable by path on every hostname; add a deny rule per host for real isolation.
+
 ## Ban behaviour
 
 `static/jit-guard.js` blocks the page with a full-screen "Access suspended" overlay as soon as the portal reports the client as banned (checked on load, every second, on bfcache restore, and right after a failed attack request), then redirects to the portal after 10 s. All responses are `Cache-Control: no-store`.

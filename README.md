@@ -137,6 +137,7 @@ python3 avi_publish.py --delete                 # detach policies and delete wha
 * Credentials come from `AVI_USERNAME` / `AVI_PASSWORD` or a prompt and are never written to disk.
 * A template VS (default `finance-app`) supplies profiles, certificate, SE group, VRF, WAF and the shared pool. If it is one of the three sites, only its policy is attached, after any policy already on it (such as the ban rule); its pool, certificate and VIP are untouched.
 * VIPs: auto-allocate is offered only when the cloud has IPAM, otherwise a static address is asked for and checked against existing vsvips.
+* New VSs inherit the template's other policies (such as the ban rule) before their own rewrite policy.
 * Rules match the Host header plus path, rewrite to `/FIN`, `/HT` or `/ENG`, and pass `static`, `healthz`, `search` and `api` through. If the application profile does not insert `X-Forwarded-For`, the script offers an `-xff` copy of it.
 * `python3 -m unittest test_avi_publish` runs the flow against an in-memory fake controller.
 

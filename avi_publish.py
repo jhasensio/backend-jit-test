@@ -285,6 +285,10 @@ def run(api, cfg, dry_run=False):
     for v in api.list("vsvip"):
         for e in v.get("vip", []):
             used[e.get("ip_address", {}).get("addr")] = v["name"]
+    # new VSs inherit the template's other policies (e.g. the ban REJECT rule) so they are not left unprotected
+    own = {s["policy"] for s in SITES}
+    inherited = [p for p in (tpl or {}).get("http_policies", [])
+                 if api.call("GET", p["http_policy_set_ref"])["name"] not in own]
     results = []
     for site in SITES:
         k = site["key"]
@@ -307,7 +311,7 @@ def run(api, cfg, dry_run=False):
         vsvip = upsert(api, "vsvip", {
             "name": vsvip_name, "tenant_ref": tenant_ref, "cloud_ref": cloud["url"],
             "vrf_context_ref": common.get("vrf_context_ref"), "vip": [entry]}, created)
-        pols = attach_policy(existing.get("http_policies", []) if existing else [], policy["url"])
+        pols = attach_policy(existing["http_policies"] if existing else copy.deepcopy(inherited), policy["url"])
         body = {**common, "name": vs_name, "tenant_ref": tenant_ref, "cloud_ref": cloud["url"],
                 "vsvip_ref": vsvip["url"], "pool_ref": pool_ref, "http_policies": pols, "enabled": True}
         upsert(api, "virtualservice", body, created)

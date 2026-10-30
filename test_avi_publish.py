@@ -51,7 +51,7 @@ def seed():
     vsvip = api.add("vsvip", name="finance-app-vip", vip=[{
         "vip_id": "1", "ip_address": {"addr": "192.168.200.10", "type": "V4"},
         "ipam_network_subnet": {"network_ref": f"{B}/api/network/n", "subnet": {"ip_addr": {"addr": "192.168.200.0", "type": "V4"}, "mask": 24}}}])
-    ban = f"{B}/api/httppolicyset/ban"
+    ban = api.add("httppolicyset", name="ban-reject")["url"]
     api.add("virtualservice", name="finance-app", cloud_ref=cloud_url, pool_ref=pool["url"], vsvip_ref=vsvip["url"],
             application_profile_ref=prof["url"], se_group_ref=f"{B}/api/serviceenginegroup/se",
             vrf_context_ref=f"{B}/api/vrfcontext/v", services=[{"port": 443, "enable_ssl": True}],
@@ -77,8 +77,11 @@ class PublishTest(unittest.TestCase):
         fin = vs["finance-app"]["http_policies"]
         self.assertEqual(fin[0], {"http_policy_set_ref": ban, "index": 3})
         self.assertEqual(fin[1]["index"], 4)
-        # new VSs start at 11 and use the cloned profile with XFF
-        self.assertEqual(vs["hr-app"]["http_policies"][0]["index"], 11)
+        # new VSs inherit the template's ban policy first, then their own rewrite policy
+        hr = vs["hr-app"]["http_policies"]
+        self.assertEqual(hr[0], {"http_policy_set_ref": ban, "index": 3})
+        self.assertEqual(hr[1]["index"], 4)
+        # cloned profile with XFF
         prof = api.call("GET", vs["hr-app"]["application_profile_ref"])
         self.assertTrue(prof["http_profile"]["xff_enabled"])
         self.assertEqual(vs["hr-app"]["services"], [{"port": 443, "enable_ssl": True}])

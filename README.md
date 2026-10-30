@@ -123,6 +123,23 @@ A rule without the path exclusions rewrites everything to the site root, so no l
 
 `/home` is left to be rewritten, so the logo returns users to their own site. Other sites stay reachable by path on every hostname; add a deny rule per host for real isolation.
 
+## Publishing the three sites with `avi_publish.py`
+
+Creates (or updates) three HTTPS virtual services, one VIP each, on one shared pool, with a `Route_*` HTTP request policy per site that applies the rewrite table above. It uses the Avi REST API through `requests` only (`pip install requests`; no Avi SDK).
+
+```bash
+python3 avi_publish.py --dry-run --insecure     # discover the controller, print every write
+python3 avi_publish.py --insecure               # interactive: tenant, cloud, template VS, WAF, pool, VIPs
+python3 avi_publish.py --config avi_answers.json   # replay the saved answers
+python3 avi_publish.py --delete                 # detach policies and delete what the run created
+```
+
+* Credentials come from `AVI_USERNAME` / `AVI_PASSWORD` or a prompt and are never written to disk.
+* A template VS (default `finance-app`) supplies profiles, certificate, SE group, VRF, WAF and the shared pool. If it is one of the three sites, only its policy is attached, after any policy already on it (such as the ban rule); its pool, certificate and VIP are untouched.
+* VIPs: auto-allocate is offered only when the cloud has IPAM, otherwise a static address is asked for and checked against existing vsvips.
+* Rules match the Host header plus path, rewrite to `/FIN`, `/HT` or `/ENG`, and pass `static`, `healthz`, `search` and `api` through. If the application profile does not insert `X-Forwarded-For`, the script offers an `-xff` copy of it.
+* `python3 -m unittest test_avi_publish` runs the flow against an in-memory fake controller.
+
 ## Ban behaviour
 
 `static/jit-guard.js` blocks the page with a full-screen "Access suspended" overlay as soon as the portal reports the client as banned (checked on load, every second, on bfcache restore, and right after a failed attack request), then redirects to the portal after 10 s. All responses are `Cache-Control: no-store`.

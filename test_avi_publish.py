@@ -60,7 +60,7 @@ def seed():
 
 
 ANSWERS = {"excludes": "static,healthz,search,api", "tenant": "admin", "cloud": "NSXT", "template": "finance-app", "waf": "", "xff": True, "pool": "app-pool",
-           "FIN.vs": "finance-app", "FIN.host": "finance.ans.sddc.lab", "HT.host": "hr.ans.sddc.lab", "ENG.host": "eng.ans.sddc.lab",
+           "FIN.vs": "finance-app", "FIN.host": "finance.ans.sddc.lab", "domain": "ans.sddc.lab", "HT.host": "hr.ans.sddc.lab", "ENG.host": "eng.ans.sddc.lab",
            "HT.vs": "hr-app", "ENG.vs": "eng-app", "HT.vip_mode": "static", "ENG.vip_mode": "auto", "HT.vip": "192.168.200.11"}
 
 
@@ -113,6 +113,10 @@ class PublishTest(unittest.TestCase):
         fin = next(iter(api.db["virtualservice"].values()))
         self.assertEqual([p["http_policy_set_ref"] for p in fin["http_policies"]], [ban])
         self.assertEqual(len(api.db["pool"]), 1)
+
+    def test_bare_ip_controller_gets_https(self):
+        self.assertEqual(ap.Avi("10.6.248.47/").base, "https://10.6.248.47")
+        self.assertEqual(ap.Avi("https://w01-alb.ans.sddc.lab").base, "https://w01-alb.ans.sddc.lab")
 
     def test_vip_conflict_aborts(self):
         api, _ = seed()

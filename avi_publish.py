@@ -51,7 +51,7 @@ VIP_DROP = ["ip_address", "auto_allocate_ip", "auto_allocate_ip_type", "avi_allo
 
 class Avi:
     def __init__(self, base, verify=True, dry_run=False):
-        self.base = base.rstrip("/")
+        self.base = (base if "://" in base else f"https://{base}").rstrip("/")
         self.s = requests.Session()
         self.s.verify = verify
         self.dry_run = dry_run
@@ -220,7 +220,8 @@ def vip_entry(api, cfg, cloud, tpl_vsvip, key, ip_default, used):
 def run(api, cfg, dry_run=False):
     created, attached = [], []
     host = api.base.split("//")[-1].split("/")[0]
-    suffix = host.split(".", 1)[1] if "." in host else "lab"
+    guess = host.split(".", 1)[1] if "." in host and not host.replace(".", "").isdigit() else "ans.sddc.lab"
+    suffix = ask(cfg, "domain", "Domain suffix for the site hostnames", guess)
 
     tenant = pick(cfg, "tenant", "Tenant", api.list("tenant"), "admin")
     api.tenant = tenant["name"]
